@@ -20,6 +20,20 @@ export const HeroSection: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
         
+        {/* Glowing Official NEXO Master Logo Emblem */}
+        <div className="flex justify-center mb-6 animate-fade-in">
+          <div className="relative group cursor-pointer">
+            <div className="absolute -inset-2 bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-400 rounded-3xl blur-xl opacity-70 group-hover:opacity-100 transition duration-500 animate-pulse" />
+            <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-3xl overflow-hidden border-2 border-indigo-400/40 shadow-2xl shadow-indigo-600/50 bg-slate-950 p-1 transform group-hover:scale-105 transition-transform duration-300">
+              <img
+                src="/logos/nexo-logo-master.jpg"
+                alt="NEXO Official Master Logo"
+                className="w-full h-full object-cover rounded-[20px]"
+              />
+            </div>
+          </div>
+        </div>
+
         {/* Slogan Pill with Glowing Border */}
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900/80 border border-indigo-500/30 text-indigo-300 font-bold text-xs sm:text-sm mb-8 shadow-xl backdrop-blur-md animate-fade-in ring-1 ring-white/10">
           <Sparkles size={16} className="text-amber-400 animate-pulse" />

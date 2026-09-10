@@ -140,24 +140,9 @@ export const HeaderNav: React.FC = () => {
             </div>
           ) : (
             <div className="flex items-center gap-2">
-              <button
-                onClick={handleGuestEntry}
-                disabled={guestLoading}
-                className="px-3.5 py-2 rounded-xl border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium text-xs lg:text-sm transition-colors flex items-center gap-1.5"
-              >
-                {guestLoading ? (
-                  'A carregar...'
-                ) : (
-                  <>
-                    <ShieldCheck size={16} className="text-emerald-500" />
-                    <span>Convidado (Sem Registo)</span>
-                  </>
-                )}
-              </button>
-
               <Link
                 to="/login"
-                className="px-3.5 py-2 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 font-medium text-sm transition-colors flex items-center gap-1"
+                className="px-4 py-2 rounded-xl text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold text-sm transition-colors flex items-center gap-1.5"
               >
                 <LogIn size={16} />
                 <span>Entrar</span>
@@ -165,7 +150,7 @@ export const HeaderNav: React.FC = () => {
 
               <Link
                 to="/register"
-                className="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium text-sm shadow-md shadow-indigo-500/25 transition-all flex items-center gap-1 group"
+                className="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold text-sm shadow-md shadow-indigo-500/25 transition-all flex items-center gap-1 group"
               >
                 <span>Criar Conta</span>
                 <ArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform" />
