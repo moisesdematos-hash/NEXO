@@ -1,22 +1,11 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Heart, ArrowRight, Zap, Sparkles } from 'lucide-react';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { Heart, ArrowRight, Sparkles, ShieldCheck, Lock, FileText } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
 import { NexoLogo } from '../../../components/ui/NexoLogo';
 
 export const FooterSection: React.FC = () => {
-  const { user, signInAsGuest } = useAuth();
-  const [guestLoading, setGuestLoading] = useState(false);
-  const navigate = useNavigate();
-
-  const handleGuestEntry = async () => {
-    setGuestLoading(true);
-    const { error } = await signInAsGuest();
-    setGuestLoading(false);
-    if (!error) {
-      navigate('/app');
-    }
-  };
+  const { user } = useAuth();
 
   return (
     <footer className="bg-slate-950 text-slate-400 border-t border-slate-800">
@@ -44,7 +33,7 @@ export const FooterSection: React.FC = () => {
                 to="/app"
                 className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-extrabold text-base shadow-xl transition-all flex items-center justify-center gap-2"
               >
-                <span>Entrar na minha conta NEXO</span>
+                <span>Entrar no meu Painel NEXO</span>
                 <ArrowRight size={18} />
               </Link>
             ) : (
@@ -57,14 +46,12 @@ export const FooterSection: React.FC = () => {
                   <ArrowRight size={18} className="text-amber-300" />
                 </Link>
 
-                <button
-                  onClick={handleGuestEntry}
-                  disabled={guestLoading}
+                <Link
+                  to="/login"
                   className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-white/10 hover:bg-white/20 text-white border border-white/20 font-extrabold text-base transition-all flex items-center justify-center gap-2"
                 >
-                  <Zap size={18} className="text-amber-400" />
-                  <span>{guestLoading ? 'A entrar...' : 'Entrar como Convidado'}</span>
-                </button>
+                  <span>Iniciar Sessão</span>
+                </Link>
               </>
             )}
           </div>
@@ -85,13 +72,27 @@ export const FooterSection: React.FC = () => {
             <a href="#calculadora" className="hover:text-white transition-colors">Calculadora ROI</a>
             <Link to="/app/family" className="hover:text-white transition-colors">Orçamento Família</Link>
             <Link to="/app/help" className="hover:text-white transition-colors">Ajuda &amp; FAQ</Link>
+            <Link to="/privacy" className="text-indigo-400 hover:text-indigo-300 font-bold transition-colors flex items-center gap-1">
+              <ShieldCheck size={14} />
+              <span>Política de Privacidade</span>
+            </Link>
+            <Link to="/terms" className="text-indigo-400 hover:text-indigo-300 font-bold transition-colors flex items-center gap-1">
+              <FileText size={14} />
+              <span>Termos de Serviço</span>
+            </Link>
           </div>
         </div>
 
         <div className="border-t border-slate-900/60 pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="font-medium text-slate-400">Sistemas 100% Operacionais • Arquitetura Local PWA</span>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="font-medium text-slate-400">Sistemas 100% Operacionais</span>
+            </div>
+            <span>•</span>
+            <span className="text-slate-400 flex items-center gap-1">
+              <Lock size={12} className="text-emerald-400" /> Criptografia AES-256 / SSL
+            </span>
           </div>
           <p>© {new Date().getFullYear()} NEXO Hub Digital. Todos os direitos reservados.</p>
           <div className="flex items-center gap-1">

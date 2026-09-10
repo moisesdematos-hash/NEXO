@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Sun, Moon, Sparkles, Type, Menu, X, LogIn, UserCheck, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Sun, Moon, Sparkles, Type, Menu, X, LogIn, UserCheck, ArrowRight } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
 import { useAccessibility } from '../../context/AccessibilityContext';
 import { useAuth } from '../../context/AuthContext';
@@ -9,19 +9,8 @@ import { NexoLogo } from '../ui/NexoLogo';
 export const HeaderNav: React.FC = () => {
   const { theme, toggleTheme, isSimpleMode, toggleSimpleMode } = useTheme();
   const { increaseFontScale, resetFontScale } = useAccessibility();
-  const { user, isGuest, signInAsGuest, signOut } = useAuth();
+  const { user, signOut } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [guestLoading, setGuestLoading] = useState(false);
-  const navigate = useNavigate();
-
-  const handleGuestEntry = async () => {
-    setGuestLoading(true);
-    const { error } = await signInAsGuest();
-    setGuestLoading(false);
-    if (!error) {
-      navigate('/app');
-    }
-  };
 
   const scrollToSection = (id: string) => {
     setMobileMenuOpen(false);
@@ -129,7 +118,7 @@ export const HeaderNav: React.FC = () => {
                 className="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium text-sm shadow-md shadow-blue-500/20 transition-all flex items-center gap-2"
               >
                 <UserCheck size={18} />
-                <span>Entrar no NEXO {isGuest && '(Convidado)'}</span>
+                <span>Entrar no NEXO</span>
               </Link>
               <button
                 onClick={() => signOut()}
@@ -273,21 +262,10 @@ export const HeaderNav: React.FC = () => {
                 >
                   Criar Conta Gratuitamente
                 </Link>
-                <button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    handleGuestEntry();
-                  }}
-                  disabled={guestLoading}
-                  className="w-full text-center py-3 rounded-xl border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-200 font-medium text-base flex items-center justify-center gap-2"
-                >
-                  <ShieldCheck size={18} className="text-emerald-500" />
-                  <span>{guestLoading ? 'A carregar...' : 'Experimentar como Convidado'}</span>
-                </button>
                 <Link
                   to="/login"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="w-full text-center py-2.5 rounded-xl text-slate-700 dark:text-slate-200 font-medium text-base"
+                  className="w-full text-center py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-medium text-base hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                 >
                   Já tenho conta (Entrar)
                 </Link>

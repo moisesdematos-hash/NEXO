@@ -1,6 +1,8 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import LandingPage from '../features/landing/LandingPage';
+import PrivacyPolicyPage from '../features/legal/PrivacyPolicyPage';
+import TermsOfServicePage from '../features/legal/TermsOfServicePage';
 import LoginPage from '../features/auth/LoginPage';
 import RegisterPage from '../features/auth/RegisterPage';
 import ResetPasswordPage from '../features/auth/ResetPasswordPage';
@@ -26,6 +28,10 @@ export const AppRoutes: React.FC = () => {
     <Routes>
       {/* Landing Page Institucional */}
       <Route path="/" element={<LandingPage />} />
+
+      {/* Páginas Legais e Políticas */}
+      <Route path="/privacy" element={<PrivacyPolicyPage />} />
+      <Route path="/terms" element={<TermsOfServicePage />} />
 
       {/* Autenticação (Pública Apenas) */}
       <Route

@@ -187,6 +187,18 @@ export const LoginPage: React.FC = () => {
             </Link>
           </p>
 
+          <p className="text-center text-[11px] text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-slate-700/60 pt-4">
+            Protegido por reCAPTCHA e sujeito à{' '}
+            <Link to="/privacy" className="text-indigo-600 dark:text-indigo-400 hover:underline font-semibold">
+              Política de Privacidade
+            </Link>{' '}
+            e{' '}
+            <Link to="/terms" className="text-indigo-600 dark:text-indigo-400 hover:underline font-semibold">
+              Termos de Serviço
+            </Link>{' '}
+            do NEXO.
+          </p>
+
         </div>
       </main>
 
