@@ -39,8 +39,9 @@ export const SidebarNav: React.FC = () => {
   ];
 
   const secondaryNavItems = [
+    { to: '/app/manual', label: 'Manual de Uso', icon: <BookOpen size={20} /> },
+    { to: '/app/help', label: 'Ajuda & FAQ', icon: <HelpCircle size={20} /> },
     { to: '/app/settings', label: 'Definições', icon: <Settings size={20} /> },
-    { to: '/app/help', label: 'Ajuda', icon: <HelpCircle size={20} /> },
     ...(isAdmin ? [{ to: '/app/admin', label: 'Administração', icon: <ShieldCheck size={20} /> }] : []),
   ];
 

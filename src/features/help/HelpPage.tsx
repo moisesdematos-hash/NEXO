@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  HelpCircle, Search, MessageSquare, Volume2, ChevronDown, ChevronUp, 
-  Send, Shield, CheckCircle2, Zap, Compass, Info, ArrowLeft
+  HelpCircle, Search, MessageSquare, Volume2, ChevronDown, ChevronUp, ChevronRight,
+  Send, Shield, CheckCircle2, Zap, Info, ArrowLeft, BookOpen, Compass
 } from 'lucide-react';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
@@ -194,6 +194,32 @@ export const HelpPage: React.FC = () => {
             />
           </div>
         </div>
+      </div>
+
+      {/* Banner de Acesso Rápido ao Manual de Instruções */}
+      <div className="p-6 rounded-3xl bg-gradient-to-r from-indigo-900/60 via-purple-900/50 to-slate-900 border border-indigo-500/30 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl backdrop-blur-md">
+        <div className="flex items-start gap-4 text-left">
+          <div className="p-3.5 rounded-2xl bg-indigo-500/20 text-amber-400 border border-indigo-500/30 shrink-0">
+            <BookOpen size={24} />
+          </div>
+          <div className="space-y-1">
+            <h3 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+              <span>Manual de Instruções Passo a Passo</span>
+              <span className="text-[10px] bg-amber-400 text-slate-950 font-black px-2 py-0.5 rounded-full uppercase">Novo</span>
+            </h3>
+            <p className="text-xs text-indigo-200/80 max-w-xl">
+              Guia prático e ilustrado que explica cada funcionalidade: orçamento da família, explicadores de IA para estudantes, criação de cursos e comandos de voz.
+            </p>
+          </div>
+        </div>
+
+        <button
+          onClick={() => navigate('/app/manual')}
+          className="px-6 py-3 rounded-2xl bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white font-extrabold text-xs sm:text-sm transition-all shadow-lg flex items-center gap-2 shrink-0 border border-white/20 cursor-pointer"
+        >
+          <span>Abrir Manual Completo</span>
+          <ChevronRight size={16} />
+        </button>
       </div>
 
       {/* Categorias de Filtro */}

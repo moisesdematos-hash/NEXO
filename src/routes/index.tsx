@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import LandingPage from '../features/landing/LandingPage';
 import PrivacyPolicyPage from '../features/legal/PrivacyPolicyPage';
 import TermsOfServicePage from '../features/legal/TermsOfServicePage';
+import UserManualPage from '../features/help/UserManualPage';
 import LoginPage from '../features/auth/LoginPage';
 import RegisterPage from '../features/auth/RegisterPage';
 import ResetPasswordPage from '../features/auth/ResetPasswordPage';
@@ -29,9 +30,10 @@ export const AppRoutes: React.FC = () => {
       {/* Landing Page Institucional */}
       <Route path="/" element={<LandingPage />} />
 
-      {/* Páginas Legais e Políticas */}
+      {/* Páginas Legais, Políticas & Manual */}
       <Route path="/privacy" element={<PrivacyPolicyPage />} />
       <Route path="/terms" element={<TermsOfServicePage />} />
+      <Route path="/manual" element={<UserManualPage />} />
 
       {/* Autenticação (Pública Apenas) */}
       <Route
@@ -75,6 +77,7 @@ export const AppRoutes: React.FC = () => {
         <Route path="students" element={<StudentsPage />} />
         <Route path="settings" element={<SettingsPage />} />
         <Route path="help" element={<HelpPage />} />
+        <Route path="manual" element={<UserManualPage />} />
         <Route path="admin" element={<AdminPage />} />
       </Route>
 

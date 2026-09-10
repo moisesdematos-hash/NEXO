@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, ArrowRight, Sparkles, ShieldCheck, Lock, FileText } from 'lucide-react';
+import { Heart, ArrowRight, Sparkles, ShieldCheck, Lock, FileText, BookOpen } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
 import { NexoLogo } from '../../../components/ui/NexoLogo';
 
@@ -69,7 +69,10 @@ export const FooterSection: React.FC = () => {
             <a href="#recursos" className="hover:text-white transition-colors">Recursos</a>
             <a href="#como-funciona" className="hover:text-white transition-colors">Como Funciona</a>
             <a href="#precos" className="hover:text-white transition-colors">Planos Grátis</a>
-            <a href="#calculadora" className="hover:text-white transition-colors">Calculadora ROI</a>
+            <Link to="/manual" className="text-amber-400 hover:text-amber-300 font-bold transition-colors flex items-center gap-1">
+              <BookOpen size={14} />
+              <span>Manual de Instruções</span>
+            </Link>
             <Link to="/app/family" className="hover:text-white transition-colors">Orçamento Família</Link>
             <Link to="/app/help" className="hover:text-white transition-colors">Ajuda &amp; FAQ</Link>
             <Link to="/privacy" className="text-indigo-400 hover:text-indigo-300 font-bold transition-colors flex items-center gap-1">
