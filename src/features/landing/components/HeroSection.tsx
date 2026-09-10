@@ -1,25 +1,14 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { 
   ArrowRight, Sparkles, ShieldCheck, CheckCircle2, UserCheck, 
-  MessageSquare, Trophy, ListChecks, PieChart, Mic, Zap, Smartphone, Check
+  MessageSquare, Trophy, ListChecks, PieChart, Mic, Smartphone, Check
 } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
 
 export const HeroSection: React.FC = () => {
-  const { signInAsGuest, user } = useAuth();
-  const [guestLoading, setGuestLoading] = useState(false);
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<'chat' | 'goals' | 'lists' | 'finance' | 'calendar'>('chat');
-  const navigate = useNavigate();
-
-  const handleGuestEntry = async () => {
-    setGuestLoading(true);
-    const { error } = await signInAsGuest();
-    setGuestLoading(false);
-    if (!error) {
-      navigate('/app');
-    }
-  };
 
   return (
     <section className="relative pt-12 pb-20 md:pt-20 md:pb-32 overflow-hidden bg-slate-950 text-white">
@@ -73,14 +62,30 @@ export const HeroSection: React.FC = () => {
                 <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform text-amber-300" />
               </Link>
 
-              <button
-                onClick={handleGuestEntry}
-                disabled={guestLoading}
-                className="w-full sm:w-auto px-8 py-4 rounded-2xl border border-slate-700 bg-slate-900/80 hover:bg-slate-800 text-slate-200 font-extrabold text-lg transition-all backdrop-blur-md shadow-lg flex items-center justify-center gap-2"
+              <Link
+                to="/login"
+                className="w-full sm:w-auto px-8 py-4 rounded-2xl border border-slate-700 bg-slate-900/80 hover:bg-slate-800 text-slate-200 font-extrabold text-lg transition-all backdrop-blur-md shadow-lg flex items-center justify-center gap-3 hover:text-white"
               >
-                <Zap size={20} className="text-amber-400" />
-                <span>{guestLoading ? 'A entrar...' : 'Entrar como Convidado'}</span>
-              </button>
+                <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24">
+                  <path
+                    fill="#4285F4"
+                    d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"
+                  />
+                  <path
+                    fill="#34A853"
+                    d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.29v3.15C3.26 21.3 7.31 24 12 24z"
+                  />
+                  <path
+                    fill="#FBBC05"
+                    d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.29C.47 8.2.0 10.04.0 12s.47 3.8 1.29 5.42l3.99-3.15z"
+                  />
+                  <path
+                    fill="#EA4335"
+                    d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.26 2.7 1.29 6.58l3.99 3.15c.95-2.83 3.6-4.98 6.72-4.98z"
+                  />
+                </svg>
+                <span>Entrar com Google</span>
+              </Link>
             </>
           )}
         </div>

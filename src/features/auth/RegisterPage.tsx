@@ -5,12 +5,11 @@ import { useAuth } from '../../context/AuthContext';
 import { HeaderNav } from '../../components/layout/HeaderNav';
 
 export const RegisterPage: React.FC = () => {
-  const { signUpWithEmail, signInWithGoogle, signInAsGuest } = useAuth();
+  const { signUpWithEmail, signInWithGoogle } = useAuth();
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [guestLoading, setGuestLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
@@ -35,7 +34,7 @@ export const RegisterPage: React.FC = () => {
 
     if (error) {
       if (error.message.toLowerCase().includes('rate limit')) {
-        setErrorMsg('O limite temporário de registos por email do Supabase foi atingido. Clica em "Experimentar como Convidado" abaixo para entrar imediatamente, ou tenta fazer Login se a tua conta já foi criada.');
+        setErrorMsg('O limite temporário de registos por email do Supabase foi atingido. Tenta entrar com o botão Google abaixo.');
       } else {
         setErrorMsg(`Erro ao criar conta: ${error.message}`);
       }
@@ -54,19 +53,6 @@ export const RegisterPage: React.FC = () => {
     if (error) {
       setGoogleLoading(false);
       setErrorMsg(`Erro ao registar com Google: ${error.message}`);
-    }
-  };
-
-  const handleGuestLogin = async () => {
-    setGuestLoading(true);
-    setErrorMsg(null);
-    const { error } = await signInAsGuest();
-    setGuestLoading(false);
-
-    if (error) {
-      setErrorMsg(`Erro ao entrar como convidado: ${error.message}`);
-    } else {
-      navigate('/app');
     }
   };
 
@@ -210,15 +196,6 @@ export const RegisterPage: React.FC = () => {
                 />
               </svg>
               <span>{googleLoading ? 'A redirecionar para o Google...' : 'Registar com Google'}</span>
-            </button>
-
-            <button
-              onClick={handleGuestLogin}
-              disabled={guestLoading}
-              type="button"
-              className="w-full py-3 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-200 font-semibold text-sm transition-all"
-            >
-              {guestLoading ? 'A entrar...' : 'Experimentar como Convidado'}
             </button>
           </div>
 

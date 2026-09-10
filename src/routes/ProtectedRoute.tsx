@@ -4,12 +4,11 @@ import { useAuth } from '../context/AuthContext';
 import { AlertCircle, ArrowLeft } from 'lucide-react';
 
 export const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { user, loading, signInAsGuest } = useAuth();
+  const { user, loading } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
 
   const [hasTimedOut, setHasTimedOut] = useState(false);
-  const [isGuestEntering, setIsGuestEntering] = useState(false);
 
   // Check if URL has OAuth callback parameters
   const hasOAuthTokens = typeof window !== 'undefined' && (
@@ -37,12 +36,6 @@ export const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ childr
     };
   }, [hasOAuthTokens, user]);
 
-  const handleGuestFallback = async () => {
-    setIsGuestEntering(true);
-    await signInAsGuest();
-    setIsGuestEntering(false);
-  };
-
   // If timed out and still no user, show clean recovery screen instead of hanging
   if (hasTimedOut && !user) {
     return (
@@ -56,26 +49,18 @@ export const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ childr
               A autenticação demorou a responder
             </h2>
             <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-              O Google ou o Supabase não concluíram a troca de chaves a tempo. Verifique se as chaves no Supabase e no Google Cloud estão ativas.
+              O Google ou o Supabase não concluíram a troca de chaves a tempo. Por favor tente iniciar sessão novamente.
             </p>
           </div>
 
           <div className="space-y-2 pt-2">
             <button
-              onClick={handleGuestFallback}
-              disabled={isGuestEntering}
-              type="button"
-              className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md transition-all cursor-pointer"
-            >
-              {isGuestEntering ? 'A entrar...' : 'Entrar como Convidado (Aceder Agora)'}
-            </button>
-            <button
               onClick={() => navigate('/login')}
               type="button"
-              className="w-full py-2.5 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 font-semibold text-xs transition-all cursor-pointer flex items-center justify-center gap-1.5"
+              className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-md transition-all cursor-pointer flex items-center justify-center gap-1.5"
             >
               <ArrowLeft size={14} />
-              <span>Voltar ao Login</span>
+              <span>Voltar e Tentar Novamente</span>
             </button>
           </div>
         </div>

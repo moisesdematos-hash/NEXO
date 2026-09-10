@@ -6,11 +6,10 @@ import { HeaderNav } from '../../components/layout/HeaderNav';
 import { PhoneOTPModal } from './PhoneOTPModal';
 
 export const LoginPage: React.FC = () => {
-  const { signInWithEmail, signInWithGoogle, signInAsGuest } = useAuth();
+  const { signInWithEmail, signInWithGoogle } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [guestLoading, setGuestLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [phoneModalOpen, setPhoneModalOpen] = useState(false);
@@ -42,19 +41,6 @@ export const LoginPage: React.FC = () => {
     if (error) {
       setGoogleLoading(false);
       setErrorMsg(`Erro ao iniciar sessão com Google: ${error.message}`);
-    }
-  };
-
-  const handleGuestLogin = async () => {
-    setGuestLoading(true);
-    setErrorMsg(null);
-    const { error } = await signInAsGuest();
-    setGuestLoading(false);
-
-    if (error) {
-      setErrorMsg(`Erro ao entrar como convidado: ${error.message}`);
-    } else {
-      navigate('/app');
     }
   };
 
@@ -190,15 +176,6 @@ export const LoginPage: React.FC = () => {
             >
               <Phone size={18} className="text-blue-600 dark:text-blue-400" />
               <span>Entrar com Telefone (SMS OTP)</span>
-            </button>
-
-            <button
-              onClick={handleGuestLogin}
-              disabled={guestLoading}
-              type="button"
-              className="w-full py-3 rounded-xl bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-800 dark:text-slate-200 font-semibold text-sm transition-all"
-            >
-              {guestLoading ? 'A entrar...' : 'Entrar como Convidado (Sem Registo)'}
             </button>
           </div>
 
