@@ -16,7 +16,7 @@ export interface DynamicAiProvider {
   isDefault: boolean;
 }
 
-const envGroqKey = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_GROQ_API_KEY) || (typeof process !== 'undefined' && process.env?.VITE_GROQ_API_KEY) || '';
+const envGroqKey = (typeof import.meta !== 'undefined' && (import.meta.env?.VITE_GROQ_API_KEY || (import.meta.env as any)?.GROQ_API_KEY)) || (typeof process !== 'undefined' && (process.env?.VITE_GROQ_API_KEY || process.env?.GROQ_API_KEY)) || '';
 const DEFAULT_FALLBACK_GROQ_KEY = envGroqKey;
 
 export const ACTIVE_GROQ_MODELS = [
