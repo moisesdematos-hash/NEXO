@@ -16,11 +16,11 @@ export const FeatureFlagsTab: React.FC = () => {
   const [flags, setFlags] = useState<FeatureFlag[]>([
     {
       id: 'flag-1',
-      key: 'ENABLE_GUEST_MODE',
-      title: 'Modo Convidado sem Registo',
-      description: 'Permite aos utilizadores experimentar o NEXO instantaneamente sem criar conta.',
+      key: 'ENABLE_GOOGLE_OAUTH',
+      title: 'Autenticação Segura com Google OAuth',
+      description: 'Ativa o login em 1-clique com conta Google e sincronização instantânea de perfil.',
       enabled: true,
-      category: 'core',
+      category: 'security',
     },
     {
       id: 'flag-2',

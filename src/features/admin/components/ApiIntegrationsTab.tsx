@@ -4,6 +4,7 @@ import {
   RefreshCw, Eye, EyeOff, Save, Zap
 } from 'lucide-react';
 import { setAndActivateApiKey } from '../../../services/aiConfigService';
+import { supabase } from '../../../lib/supabase';
 
 interface ApiIntegration {
   id: string;
@@ -127,11 +128,38 @@ export const ApiIntegrationsTab: React.FC = () => {
 
     try {
       // Test real connectivity
-      if (id === 'supa-1') {
-        const res = await fetch('/api/groq/openai/v1/chat/completions', { method: 'HEAD' }).catch(() => null);
-        if (!res && !navigator.onLine) status = 'error';
+      if (id === 'groq-api') {
+        const groqInt = integrations.find((i) => i.id === 'groq-api');
+        const key = groqInt?.apiKey && !groqInt.apiKey.includes('•••') 
+          ? groqInt.apiKey 
+          : (import.meta.env?.VITE_GROQ_API_KEY || (import.meta.env as any)?.GROQ_API_KEY || '');
+
+        if (key) {
+          const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${key.trim()}`,
+            },
+            body: JSON.stringify({
+              model: 'llama-3.3-70b-versatile',
+              messages: [{ role: 'user', content: 'ping' }],
+              max_tokens: 5,
+            }),
+          });
+          if (!res.ok) status = 'error';
+        } else {
+          status = 'error';
+        }
+      } else if (id === 'supa-1') {
+        const { error } = await supabase.from('profiles').select('id').limit(1);
+        if (error && error.code !== 'PGRST116') status = 'error';
+      } else if (id === 'push-1') {
+        if (!('Notification' in window) || !('serviceWorker' in navigator)) {
+          status = 'error';
+        }
       } else {
-        await new Promise((r) => setTimeout(r, 350));
+        await new Promise((r) => setTimeout(r, 200));
       }
     } catch {
       status = 'error';

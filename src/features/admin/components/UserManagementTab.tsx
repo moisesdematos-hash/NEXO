@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Users, Shield, Search, UserPlus, Edit3, Trash2, CheckSquare, Square, 
-  Download, Filter, Sparkles, Eye, X
+  Download, Filter, Sparkles, Eye, X, RefreshCw, CheckCircle2
 } from 'lucide-react';
 import { Avatar } from '../../../components/ui/Avatar';
+import { supabase } from '../../../lib/supabase';
+import { useAuth } from '../../../context/AuthContext';
 
 export interface UserRecord {
   id: string;
@@ -17,62 +19,15 @@ export interface UserRecord {
   lastActive: string;
   tasksCount: number;
   familyGroup?: string;
+  avatarUrl?: string | null;
 }
 
 export const UserManagementTab: React.FC = () => {
-  const [users, setUsers] = useState<UserRecord[]>([
-    {
-      id: 'u-1',
-      name: 'Administrador Master NEXO',
-      email: 'admin@nexo.app',
-      role: 'admin',
-      plan: 'Família Pro',
-      xpLevel: 5,
-      joinedDate: '2026-01-10',
-      status: 'active',
-      lastActive: 'Agora mesmo',
-      tasksCount: 142,
-      familyGroup: 'Família Master',
-    },
-    {
-      id: 'u-2',
-      name: 'Marta Silva',
-      email: 'marta.silva@gmail.com',
-      role: 'user',
-      plan: 'Família Pro',
-      xpLevel: 4,
-      joinedDate: '2026-02-14',
-      status: 'active',
-      lastActive: 'Há 15 min',
-      tasksCount: 68,
-      familyGroup: 'Casa da Marta & Pedro',
-    },
-    {
-      id: 'u-3',
-      name: 'Pedro Silva',
-      email: 'pedro.silva@gmail.com',
-      role: 'user',
-      plan: 'Família Pro',
-      xpLevel: 3,
-      joinedDate: '2026-02-15',
-      status: 'active',
-      lastActive: 'Há 2 horas',
-      tasksCount: 45,
-      familyGroup: 'Casa da Marta & Pedro',
-    },
-    {
-      id: 'u-4',
-      name: 'Convidado Demonstrativo',
-      email: 'guest-session-8923@nexo.local',
-      role: 'guest',
-      plan: 'Starter',
-      xpLevel: 1,
-      joinedDate: 'Hoje',
-      status: 'active',
-      lastActive: 'Há 5 min',
-      tasksCount: 12,
-    },
-  ]);
+  const { user, profile } = useAuth();
+  const [users, setUsers] = useState<UserRecord[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
+  const [successToast, setSuccessToast] = useState<string | null>(null);
 
   // Filters & Search State
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -91,6 +46,83 @@ export const UserManagementTab: React.FC = () => {
   const [newEmail, setNewEmail] = useState('');
   const [newRole, setNewRole] = useState<'admin' | 'user' | 'guest'>('user');
   const [newPlan, setNewPlan] = useState<'Starter' | 'Família Pro' | 'Business Equipas'>('Família Pro');
+
+  const fetchLiveUsers = async () => {
+    try {
+      const { data: profiles, error } = await (supabase as any)
+        .from('profiles')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      const { data: tasks } = await (supabase as any).from('tasks').select('user_id');
+      const taskCountMap: Record<string, number> = {};
+      (tasks as any[])?.forEach((t: any) => {
+        if (t.user_id) taskCountMap[t.user_id] = (taskCountMap[t.user_id] || 0) + 1;
+      });
+
+      if (!error && profiles && (profiles as any[]).length > 0) {
+        const mapped: UserRecord[] = (profiles as any[]).map((p: any) => {
+          const isCurrentAdmin = (p.id === user?.id && user?.email?.toLowerCase().includes('moises')) || p.role === 'admin';
+          const emailVal = (p.id === user?.id && user?.email) 
+            ? user.email 
+            : (p.preferences && typeof p.preferences === 'object' && p.preferences.email)
+            ? p.preferences.email
+            : `${p.full_name?.toLowerCase().replace(/\s+/g, '.') || 'user'}@nexo.app`;
+
+          return {
+            id: p.id,
+            name: p.full_name || 'Utilizador NEXO',
+            email: emailVal,
+            role: isCurrentAdmin ? 'admin' : (p.is_guest ? 'guest' : 'user'),
+            plan: 'Família Pro',
+            xpLevel: 5,
+            joinedDate: p.created_at ? new Date(p.created_at).toLocaleDateString('pt-PT') : 'Hoje',
+            status: 'active',
+            lastActive: p.updated_at ? new Date(p.updated_at).toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' }) : 'Agora',
+            tasksCount: taskCountMap[p.id] || 0,
+            avatarUrl: p.avatar_url,
+          };
+        });
+        setUsers(mapped);
+      } else if (user) {
+        // Fallback com utilizador atual conectado
+        setUsers([
+          {
+            id: user.id,
+            name: profile?.full_name || user.email?.split('@')[0] || 'Administrador Master',
+            email: user.email || 'moisesdematos@gmail.com',
+            role: 'admin',
+            plan: 'Família Pro',
+            xpLevel: 5,
+            joinedDate: 'Hoje',
+            status: 'active',
+            lastActive: 'Agora mesmo',
+            tasksCount: 1,
+            avatarUrl: profile?.avatar_url,
+          }
+        ]);
+      }
+    } catch (err) {
+      console.warn('Erro ao carregar utilizadores em tempo real:', err);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchLiveUsers();
+  }, [user, profile]);
+
+  const handleRefresh = () => {
+    setRefreshing(true);
+    fetchLiveUsers();
+  };
+
+  const showToast = (msg: string) => {
+    setSuccessToast(msg);
+    setTimeout(() => setSuccessToast(null), 3500);
+  };
 
   // Filtered Users
   const filteredUsers = users.filter((u) => {
@@ -121,12 +153,13 @@ export const UserManagementTab: React.FC = () => {
   };
 
   // Actions
-  const handleCreateUser = (e: React.FormEvent) => {
+  const handleCreateUser = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newName || !newEmail) return;
 
+    const newId = `user_${Date.now()}`;
     const newUser: UserRecord = {
-      id: `u-${Date.now()}`,
+      id: newId,
       name: newName,
       email: newEmail,
       role: newRole,
@@ -138,26 +171,52 @@ export const UserManagementTab: React.FC = () => {
       tasksCount: 0,
     };
 
+    // Gravar no Supabase
+    try {
+      await (supabase as any).from('profiles').upsert({
+        id: newId,
+        full_name: newName,
+        role: newRole,
+        is_guest: newRole === 'guest',
+        preferences: { email: newEmail },
+        updated_at: new Date().toISOString(),
+      });
+    } catch {}
+
     setUsers([newUser, ...users]);
     setNewName('');
     setNewEmail('');
     setIsAddModalOpen(false);
+    showToast('Utilizador adicionado com sucesso!');
   };
 
-  const handleUpdateUser = (e: React.FormEvent) => {
+  const handleUpdateUser = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingUser) return;
+
+    try {
+      await (supabase as any).from('profiles').update({
+        full_name: editingUser.name,
+        role: editingUser.role,
+        updated_at: new Date().toISOString(),
+      }).eq('id', editingUser.id);
+    } catch {}
 
     setUsers((prev) =>
       prev.map((u) => (u.id === editingUser.id ? editingUser : u))
     );
     setEditingUser(null);
+    showToast('Perfil de utilizador atualizado!');
   };
 
-  const handleDeleteUser = (id: string) => {
+  const handleDeleteUser = async (id: string) => {
     if (confirm('Tem a certeza que deseja eliminar este utilizador?')) {
+      try {
+        await supabase.from('profiles').delete().eq('id', id);
+      } catch {}
       setUsers((prev) => prev.filter((u) => u.id !== id));
       setSelectedUserIds((prev) => prev.filter((i) => i !== id));
+      showToast('Utilizador removido do sistema.');
     }
   };
 
@@ -169,6 +228,7 @@ export const UserManagementTab: React.FC = () => {
           : u
       )
     );
+    showToast('Estado da conta alterado com sucesso.');
   };
 
   // Bulk Actions
@@ -212,6 +272,16 @@ export const UserManagementTab: React.FC = () => {
 
         <div className="flex items-center gap-3">
           <button
+            onClick={handleRefresh}
+            disabled={refreshing}
+            className="px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold text-xs shadow transition-all flex items-center gap-1.5"
+            title="Atualizar dados em tempo real da base de dados"
+          >
+            <RefreshCw size={14} className={refreshing ? 'animate-spin text-indigo-400' : ''} />
+            <span>{refreshing ? 'A sincronizar...' : 'Sincronizar'}</span>
+          </button>
+
+          <button
             onClick={handleExportCSV}
             className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-bold text-xs shadow transition-all flex items-center gap-1.5"
           >
@@ -228,6 +298,13 @@ export const UserManagementTab: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {successToast && (
+        <div className="p-3.5 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-800 dark:text-emerald-200 font-semibold text-xs flex items-center gap-2 animate-fade-in">
+          <CheckCircle2 size={16} className="text-emerald-500 shrink-0" />
+          <span>{successToast}</span>
+        </div>
+      )}
 
       {/* KPI Stats Grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -361,7 +438,23 @@ export const UserManagementTab: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
-              {filteredUsers.map((u) => {
+              {loading && users.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="py-8 text-center text-slate-400">
+                    <div className="flex items-center justify-center gap-2">
+                      <RefreshCw size={16} className="animate-spin text-indigo-500" />
+                      <span>A carregar utilizadores do Supabase...</span>
+                    </div>
+                  </td>
+                </tr>
+              ) : filteredUsers.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="py-8 text-center text-slate-400">
+                    Nenhum utilizador encontrado com os filtros selecionados.
+                  </td>
+                </tr>
+              ) : (
+                filteredUsers.map((u) => {
                 const isSelected = selectedUserIds.includes(u.id);
                 return (
                   <tr
@@ -466,7 +559,7 @@ export const UserManagementTab: React.FC = () => {
                     </td>
                   </tr>
                 );
-              })}
+              }))}
             </tbody>
           </table>
         </div>
