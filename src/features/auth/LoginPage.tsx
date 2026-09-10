@@ -170,12 +170,19 @@ export const LoginPage: React.FC = () => {
             </button>
 
             <button
-              onClick={() => setPhoneModalOpen(true)}
+              onClick={() => {
+                setPhoneModalOpen(true);
+              }}
               type="button"
-              className="w-full py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-semibold text-sm transition-all flex items-center justify-center gap-3"
+              className="w-full py-3 px-4 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-750 text-slate-800 dark:text-slate-200 font-semibold text-sm transition-all flex items-center justify-between group cursor-pointer shadow-xs"
             >
-              <Phone size={18} className="text-blue-600 dark:text-blue-400" />
-              <span>Entrar com Telefone (SMS OTP)</span>
+              <div className="flex items-center gap-3">
+                <Phone size={18} className="text-blue-600 dark:text-blue-400" />
+                <span>Entrar com Telemóvel (SMS)</span>
+              </div>
+              <span className="text-[10px] uppercase font-extrabold tracking-wider px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30">
+                Brevemente
+              </span>
             </button>
           </div>
 

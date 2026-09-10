@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Mail, Lock, User, UserPlus, AlertCircle, ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { Mail, Lock, User, UserPlus, AlertCircle, ArrowLeft, CheckCircle2, Phone } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { HeaderNav } from '../../components/layout/HeaderNav';
+import { PhoneOTPModal } from './PhoneOTPModal';
 
 export const RegisterPage: React.FC = () => {
   const { signUpWithEmail, signInWithGoogle } = useAuth();
@@ -13,6 +14,7 @@ export const RegisterPage: React.FC = () => {
   const [googleLoading, setGoogleLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [phoneModalOpen, setPhoneModalOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -197,6 +199,20 @@ export const RegisterPage: React.FC = () => {
               </svg>
               <span>{googleLoading ? 'A redirecionar para o Google...' : 'Registar com Google'}</span>
             </button>
+
+            <button
+              onClick={() => setPhoneModalOpen(true)}
+              type="button"
+              className="w-full py-3 px-4 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-750 text-slate-800 dark:text-slate-200 font-semibold text-sm transition-all flex items-center justify-between group cursor-pointer shadow-xs"
+            >
+              <div className="flex items-center gap-3">
+                <Phone size={18} className="text-blue-600 dark:text-blue-400" />
+                <span>Registar com Telemóvel (SMS)</span>
+              </div>
+              <span className="text-[10px] uppercase font-extrabold tracking-wider px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30">
+                Brevemente
+              </span>
+            </button>
           </div>
 
           <p className="text-center text-sm text-slate-600 dark:text-slate-400 pt-2">
@@ -219,6 +235,15 @@ export const RegisterPage: React.FC = () => {
 
         </div>
       </main>
+
+      <PhoneOTPModal
+        isOpen={phoneModalOpen}
+        onClose={() => setPhoneModalOpen(false)}
+        onSuccess={() => {
+          setPhoneModalOpen(false);
+          navigate('/app');
+        }}
+      />
     </div>
   );
 };

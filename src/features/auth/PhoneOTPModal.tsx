@@ -84,6 +84,16 @@ export const PhoneOTPModal: React.FC<PhoneOTPModalProps> = ({ isOpen, onClose, o
           </button>
         </div>
 
+        {/* Banner de Brevemente */}
+        <div className="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-900 dark:text-amber-200 text-xs flex items-center justify-between gap-3">
+          <span className="leading-relaxed">
+            🚀 A integração de envio de SMS global está em fase final de testes e ficará 100% ativa <strong>brevemente</strong>.
+          </span>
+          <span className="text-[10px] uppercase font-black px-2.5 py-0.5 rounded-full bg-amber-500 text-slate-950 shrink-0">
+            Brevemente
+          </span>
+        </div>
+
         {/* Notificações de Erro / Sucesso */}
         {errorMsg && (
           <div className="p-3 rounded-xl bg-red-50 dark:bg-red-950/80 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-sm flex items-center gap-2">
