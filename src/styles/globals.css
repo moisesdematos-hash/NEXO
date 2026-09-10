@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root {
+    --bg-primary: #f8fafc;
+    --bg-surface: #ffffff;
+    --bg-elevated: #f1f5f9;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #94a3b8;
+    --border-color: #e2e8f0;
+    --brand-primary: #2563eb;
+    --brand-hover: #1d4ed8;
+    --brand-light: #eff6ff;
+    
+    /* Accessibility Defaults */
+    --font-scale: 1;
+    --min-touch-target: 48px;
+  }
+
+  .dark {
+    --bg-primary: #0f172a;
+    --bg-surface: #1e293b;
+    --bg-elevated: #334155;
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-muted: #64748b;
+    --border-color: #334155;
+    --brand-primary: #3b82f6;
+    --brand-hover: #60a5fa;
+    --brand-light: #1e3a8a;
+  }
+
+  /* Simple Mode: Tipografia expandida, maior legibilidade e alvos de toque maiores */
+  .simple-mode {
+    --font-scale: 1.15;
+    --min-touch-target: 54px;
+  }
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: calc(1rem * var(--font-scale));
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', sans-serif;
+  min-height: 100vh;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Garante alvos de toque adequados para acessibilidade (WCAG 2.2 AA) */
+button, a, input, select, textarea {
+  min-height: var(--min-touch-target);
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee-tv {
+  display: flex;
+  width: max-content;
+  animation: marquee 28s linear infinite;
+}
+
+.animate-marquee-tv:hover {
+  animation-play-state: paused;
+}
