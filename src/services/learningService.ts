@@ -3,6 +3,7 @@ import { Database } from '../types/database.types';
 import { offlineStore } from '../lib/offlineStore';
 import { setGlobalNetworkStatus } from '../hooks/useNetworkStatus';
 import { getEffectiveApiKey } from './aiConfigService';
+import { knowledgeReuseService } from './knowledgeReuseService';
 
 export type LearningObjectiveRow = Database['public']['Tables']['learning_objectives']['Row'];
 export type LearningObjectiveInsert = Database['public']['Tables']['learning_objectives']['Insert'];
@@ -406,11 +407,17 @@ export const learningService = {
     return percent;
   },
 
-  async generateCourseCurriculum(objectiveId: string, topicTitle: string): Promise<{ stagesCreated: number; topicsCreated: number }> {
-    let stages = getCurriculumTemplateForTopic(topicTitle);
+  async generateCourseCurriculum(objectiveId: string, topicTitle: string): Promise<{ stagesCreated: number; topicsCreated: number; reusedFromCache?: boolean }> {
+    // 1. REUSE KNOWLEDGE CHECK (0 Tokens, Instant Load)
+    const matchingTemplate = knowledgeReuseService.findMatchingCourseTemplate(topicTitle);
+    let reusedFromCache = false;
+    let stages = matchingTemplate ? matchingTemplate.stages : getCurriculumTemplateForTopic(topicTitle);
 
-    // If online, attempt dynamic AI curriculum generation via Groq
-    if (typeof navigator === 'undefined' || navigator.onLine) {
+    if (matchingTemplate) {
+      reusedFromCache = true;
+      knowledgeReuseService.recordTokenSavings(1850);
+    } else if (typeof navigator === 'undefined' || navigator.onLine) {
+      // 2. If no template exists, attempt dynamic AI curriculum generation via Groq
       try {
         const groqKey = getEffectiveApiKey('groq');
         if (groqKey) {
@@ -449,6 +456,20 @@ export const learningService = {
                     title: st.title || st.stage_title || 'Etapa de Estudo',
                     topics: Array.isArray(st.topics) ? st.topics : ['Introdução ao Módulo', 'Prática e Exercícios']
                   }));
+
+                  // Save this newly generated course to Community Cache for future users!
+                  knowledgeReuseService.saveToCommunityTemplates({
+                    id: `comm-${Date.now()}`,
+                    title: topicTitle,
+                    category: 'Tecnologia',
+                    description: `Curso gerado pela comunidade sobre ${topicTitle}`,
+                    iconName: 'BookOpen',
+                    estimatedHours: 12,
+                    rating: 4.9,
+                    studentsCount: 1,
+                    tags: [topicTitle.toLowerCase()],
+                    stages,
+                  });
                   break;
                 }
               }
@@ -486,7 +507,7 @@ export const learningService = {
     }
 
     await this.recalculateProgress(objectiveId);
-    return { stagesCreated, topicsCreated };
+    return { stagesCreated, topicsCreated, reusedFromCache };
   },
 
   async generateLessonContent(params: {

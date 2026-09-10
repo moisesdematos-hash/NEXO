@@ -22,6 +22,9 @@ import {
   ArrowLeft,
   ChevronDown,
   ChevronRight,
+  BookOpen,
+  Star,
+  CheckCircle2,
 } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useLearning, useLearningPlans, useLearningItems } from '../../hooks/useLearning';
@@ -38,6 +41,7 @@ import { LearningObjectiveModal } from './components/LearningObjectiveModal';
 import { FlashcardsModal } from './components/FlashcardsModal';
 import { LessonModal } from './components/LessonModal';
 import { learningService, LearningObjectiveRow, LearningPlanRow } from '../../services/learningService';
+import { knowledgeReuseService, VERIFIED_COURSE_TEMPLATES } from '../../services/knowledgeReuseService';
 
 interface LearningPreferences {
   showTutorBriefing: boolean;
@@ -819,14 +823,45 @@ export const LearningPage: React.FC = () => {
                 </Button>
               </div>
 
+              {/* Banner de Reconhecimento de Modelo Semântico Instantâneo (0 Tokens) */}
+              {quickTitle.trim().length > 2 && (() => {
+                const match = knowledgeReuseService.findMatchingCourseTemplate(quickTitle);
+                if (!match) return null;
+                return (
+                  <div className="p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-between gap-3 text-xs animate-fade-in">
+                    <div className="flex items-center gap-2 text-emerald-800 dark:text-emerald-300">
+                      <CheckCircle2 size={16} className="text-emerald-500 shrink-0" />
+                      <span>
+                        Modelo Verificado Encontrado: <strong>"{match.title}"</strong> ({match.stages.reduce((a, s) => a + s.topics.length, 0)} aulas · 0 Tokens).
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        handleQuickCreateTheme(undefined, true, match.title);
+                      }}
+                      disabled={quickCreating}
+                      className="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shrink-0 shadow-xs transition-all flex items-center gap-1.5 cursor-pointer"
+                    >
+                      <Zap size={13} className="text-amber-300" />
+                      <span>Clonar Instantaneamente</span>
+                    </button>
+                  </div>
+                );
+              })()}
+
               {/* Sugestões Rápidas de Cursos */}
               <div className="flex items-center gap-1.5 flex-wrap pt-0.5">
-                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Sugestões Rápidas:</span>
+                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider flex items-center gap-1">
+                  <Zap size={12} className="text-amber-400" />
+                  <span>Atalhos Rápidos:</span>
+                </span>
                 {[
-                  { label: '🇬🇧 Inglês do Zero ao Avançado', title: 'Inglês do Zero ao Avançado' },
-                  { label: '💻 Python & IA', title: 'Programação em Python e Inteligência Artificial' },
-                  { label: '📈 Gestão de Negócios', title: 'Gestão de Negócios & Finanças' },
-                  { label: '🧠 Neurociência & Foco', title: 'Neurociência e Técnicas de Produtividade' },
+                  { label: '🇬🇧 Inglês para Conversação', title: 'Inglês Prático para Conversação & Trabalho' },
+                  { label: '💻 Python do Zero', title: 'Python do Zero ao Avançado' },
+                  { label: '💰 Finanças & Orçamento', title: 'Gestão de Finanças Pessoais & Orçamento' },
+                  { label: '⚡ Foco & Hábitos', title: 'Hiperfoco, Hábitos & Gestão do Tempo' },
+                  { label: '🤖 IA no Quotidiano', title: 'Inteligência Artificial Prática no Quotidiano' },
                 ].map((sug, idx) => (
                   <button
                     key={idx}
@@ -845,6 +880,95 @@ export const LearningPage: React.FC = () => {
             </form>
           </Card>
         )}
+      </div>
+
+      {/* 🌟 CATÁLOGO DE CURSOS PRONTOS DA COMUNIDADE (0 Tokens • Instalação em 1-Clique) */}
+      <div className="space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <span className="p-2 rounded-xl bg-amber-500/10 text-amber-500 border border-amber-500/20">
+              <BookOpen size={18} />
+            </span>
+            <div>
+              <h2 className="text-lg sm:text-xl font-black text-slate-900 dark:text-white flex items-center gap-2">
+                <span>Catálogo de Cursos Populares</span>
+                <span className="text-[10px] uppercase font-extrabold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
+                  0 Tokens • Instantâneo
+                </span>
+              </h2>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Modelos completos com etapas, aulas e testes verificados. Clique para adicionar à sua lista sem gastar tokens.
+              </p>
+            </div>
+          </div>
+
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs text-slate-600 dark:text-slate-300 font-semibold self-start sm:self-auto">
+            <Zap size={14} className="text-amber-400" />
+            <span>{knowledgeReuseService.getSavedTokensCount().toLocaleString('pt-PT')} tokens poupados</span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {VERIFIED_COURSE_TEMPLATES.map((tmpl) => {
+            const isAlreadyAdded = objectives.some(
+              (o) => o.title.toLowerCase().trim() === tmpl.title.toLowerCase().trim()
+            );
+
+            return (
+              <div
+                key={tmpl.id}
+                className="p-5 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-indigo-400 dark:hover:border-indigo-600/80 transition-all shadow-sm hover:shadow-md flex flex-col justify-between space-y-4 group"
+              >
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800">
+                      {tmpl.category}
+                    </span>
+                    <div className="flex items-center gap-1 text-xs text-amber-500 font-bold">
+                      <Star size={13} className="fill-amber-400 text-amber-400" />
+                      <span>{tmpl.rating}</span>
+                      <span className="text-[10px] text-slate-400 font-normal">({tmpl.studentsCount})</span>
+                    </div>
+                  </div>
+
+                  <h3 className="font-extrabold text-base text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                    {tmpl.title}
+                  </h3>
+
+                  <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed line-clamp-2">
+                    {tmpl.description}
+                  </p>
+
+                  <div className="flex items-center gap-3 text-[11px] text-slate-500 dark:text-slate-400 font-medium pt-1">
+                    <span>⏱️ {tmpl.estimatedHours}h de estudo</span>
+                    <span>•</span>
+                    <span>📑 {tmpl.stages.length} etapas ({tmpl.stages.reduce((a, s) => a + s.topics.length, 0)} aulas)</span>
+                  </div>
+                </div>
+
+                <Button
+                  onClick={() => handleQuickCreateTheme(undefined, true, tmpl.title)}
+                  disabled={quickCreating || isAlreadyAdded}
+                  variant={isAlreadyAdded ? 'outline' : 'primary'}
+                  size="sm"
+                  className="w-full text-xs font-extrabold justify-center"
+                >
+                  {isAlreadyAdded ? (
+                    <span className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
+                      <CheckCircle2 size={14} />
+                      <span>Já Inscrito</span>
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-1.5">
+                      <Zap size={14} className="text-amber-300" />
+                      <span>Começar Curso (Instantâneo)</span>
+                    </span>
+                  )}
+                </Button>
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       {/* 📚 GRELHA DE TEMAS DE ESTUDO */}

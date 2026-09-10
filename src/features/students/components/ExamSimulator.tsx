@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Sparkles, CheckCircle2, XCircle, RotateCcw, FileText } from 'lucide-react';
+import { Sparkles, CheckCircle2, XCircle, RotateCcw, FileText, Zap, BookOpen } from 'lucide-react';
 import { useToast } from '../../../components/ui/Toast';
+import { knowledgeReuseService, VERIFIED_EXAM_TEMPLATES, ExamTemplate } from '../../../services/knowledgeReuseService';
 
 interface Question {
   id: number;
@@ -18,48 +19,26 @@ export const ExamSimulator: React.FC = () => {
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, number>>({});
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
 
-  const sampleQuestions: Question[] = [
-    {
-      id: 1,
-      question: 'Qual é o princípio fundamental do Teorema do Valor Médio (Lagrange)?',
-      options: [
-        'Existe pelo menos um ponto onde a reta tangente é paralela à secante que une os extremos.',
-        'A derivada da função é sempre estritamente positiva em todo o domínio.',
-        'A função tem obrigatoriamente um ponto de descontinuidade.',
-        'O limite no infinito é sempre nulo.',
-      ],
-      correctAnswer: 0,
-      explanation: 'O Teorema de Lagrange garante a existência de um ponto c em ]a,b[ onde f\'(c) = (f(b)-f(a))/(b-a).',
-    },
-    {
-      id: 2,
-      question: 'Uma matriz quadrada A é invertível se e somente se:',
-      options: [
-        'O seu traço é igual a zero.',
-        'O seu determinante é diferente de zero (det(A) ≠ 0).',
-        'Todos os elementos da diagonal são negativos.',
-        'A matriz é obrigatoriamente simétrica.',
-      ],
-      correctAnswer: 1,
-      explanation: 'Se det(A) ≠ 0, a matriz A possui inversa única A^-1.',
-    },
-    {
-      id: 3,
-      question: 'A 2ª Lei de Maxwell (Lei de Gauss para o Magnetismo) estabelece que:',
-      options: [
-        'Existem monopolos magnéticos isolados na natureza.',
-        'O fluxo magnético através de qualquer superfície fechada é zero.',
-        'A corrente elétrica gera um campo elétrico estático.',
-        'O campo magnético é inversamente proporcional ao tempo.',
-      ],
-      correctAnswer: 1,
-      explanation: 'Como as linhas de campo magnético são fechadas, o fluxo magnético líquido através de qualquer superfície fechada é nulo.',
-    },
-  ];
+  const sampleQuestions: Question[] = VERIFIED_EXAM_TEMPLATES[0].questions;
+
+  const handleSelectTemplate = (template: ExamTemplate) => {
+    setInputText(template.description);
+    setQuestions(template.questions);
+    setSelectedAnswers({});
+    setIsSubmitted(false);
+    knowledgeReuseService.recordTokenSavings(1200);
+    showToast(`⚡ Exame "${template.title}" carregado instantaneamente (0 Tokens gastos)!`, 'success');
+  };
 
   const handleGenerateExam = () => {
     if (!inputText.trim()) {
       showToast('Por favor insira ou cole os seus apontamentos de estudo.', 'error');
+      return;
+    }
+
+    const matchedTemplate = knowledgeReuseService.findMatchingExamTemplate(inputText);
+    if (matchedTemplate) {
+      handleSelectTemplate(matchedTemplate);
       return;
     }
 
@@ -69,7 +48,8 @@ export const ExamSimulator: React.FC = () => {
       setQuestions(sampleQuestions);
       setSelectedAnswers({});
       setIsSubmitted(false);
-      showToast('🎉 Exame Simulado gerado com sucesso pela IA!', 'success');
+      knowledgeReuseService.recordTokenSavings(1200);
+      showToast('🎉 Exame Simulado gerado com sucesso!', 'success');
     }, 1200);
   };
 
@@ -134,14 +114,41 @@ export const ExamSimulator: React.FC = () => {
             className="w-full p-4 rounded-2xl border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 text-xs sm:text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none leading-relaxed"
           />
 
-          <div className="flex justify-end">
+          {/* Atalhos Rápidos de Exames Pré-Verificados */}
+          <div className="space-y-2 pt-1">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1">
+                <Zap size={13} className="text-amber-400" />
+                <span>Exames Modelo Prontos (0 Tokens):</span>
+              </span>
+              <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded-full">
+                ⚡ Instantâneo
+              </span>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              {VERIFIED_EXAM_TEMPLATES.map((tmpl) => (
+                <button
+                  key={tmpl.id}
+                  type="button"
+                  onClick={() => handleSelectTemplate(tmpl)}
+                  className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-indigo-950/60 text-slate-700 dark:text-slate-200 hover:text-indigo-600 text-xs font-semibold transition-all border border-slate-200 dark:border-slate-700 flex items-center gap-1.5 cursor-pointer"
+                >
+                  <BookOpen size={13} className="text-indigo-500" />
+                  <span>{tmpl.subject}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex justify-end pt-2">
             <button
               onClick={handleGenerateExam}
               disabled={isGenerating || !inputText.trim()}
-              className="px-6 py-3 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold text-xs shadow-lg transition-all flex items-center gap-2"
+              className="px-6 py-3 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold text-xs shadow-lg transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"
             >
               <Sparkles size={16} className="text-amber-300" />
-              <span>{isGenerating ? 'A gerar questões com IA...' : 'Gerar Exame Simulado'}</span>
+              <span>{isGenerating ? 'A gerar questões...' : 'Gerar Exame Simulado'}</span>
             </button>
           </div>
         </div>
