@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Check, Sparkles, ShieldCheck, Zap, Users, ArrowRight, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export const PricingSection: React.FC = () => {
-  const [billingCycle, setBillingCycle] = useState<'monthly' | 'annual'>('annual');
 
   return (
     <section id="precos" className="py-24 bg-slate-50 dark:bg-slate-900/60 relative overflow-hidden">
@@ -28,31 +27,10 @@ export const PricingSection: React.FC = () => {
             Acreditamos que a organização pessoal e familiar deve ser acessível a todos. O NEXO é 100% funcional sem subscrições obrigatórias.
           </p>
 
-          {/* Toggle */}
-          <div className="mt-8 inline-flex items-center p-1.5 rounded-2xl bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700">
-            <button
-              onClick={() => setBillingCycle('annual')}
-              className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center gap-1.5 ${
-                billingCycle === 'annual'
-                  ? 'bg-blue-600 text-white shadow-md'
-                  : 'text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              <span>Acesso Completo Beta</span>
-              <span className="bg-emerald-400 text-slate-950 text-[10px] font-extrabold px-2 py-0.5 rounded-full uppercase">
-                100% Grátis
-              </span>
-            </button>
-            <button
-              onClick={() => setBillingCycle('monthly')}
-              className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
-                billingCycle === 'monthly'
-                  ? 'bg-blue-600 text-white shadow-md'
-                  : 'text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              Modo Convidado
-            </button>
+          {/* Plan badge */}
+          <div className="mt-8 inline-flex items-center gap-2 px-4 py-2 rounded-2xl bg-slate-200 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span>Acesso Total Gratuito com a sua Conta Google ou Email</span>
           </div>
         </div>
 

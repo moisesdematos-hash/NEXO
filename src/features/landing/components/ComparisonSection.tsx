@@ -5,46 +5,46 @@ import { NexoLogo } from '../../../components/ui/NexoLogo';
 export const ComparisonSection: React.FC = () => {
   const comparisonItems = [
     {
-      feature: 'Funciona 100% Offline (PWA Instalação Nativa)',
+      feature: 'Orçamento Familiar & Divisão de Despesas',
       nexo: true,
       others: false,
-      note: 'Guarda os dados no teu dispositivo',
+      note: 'Partilha em tempo real na casa sem pagar assinaturas tipo Splitwise',
     },
     {
-      feature: 'Ditado & Assistente de Voz em Português',
+      feature: 'Mentores IA por Disciplina & Simulador de Testes',
       nexo: true,
       others: false,
-      note: 'Cria tarefas e notas sem digitar',
+      note: 'Explicadores de Matemática, Ciências e Línguas integrados para estudantes',
     },
     {
-      feature: 'Gamificação com Pontos XP e Níveis de Evolução',
+      feature: 'Trilhas de Estudo Personalizadas com IA',
       nexo: true,
       others: false,
-      note: 'Torna o cumprimento de metas motivador',
+      note: 'Cria cursos práticos de qualquer assunto em poucos segundos',
     },
     {
-      feature: 'Orçamento Familiar com Aviso de Limite & Scanner Recibos',
+      feature: 'Tudo num Único Hub Integrado',
       nexo: true,
       others: false,
-      note: 'Calcula o limite mensal automaticamente',
+      note: 'Substitui 4 a 5 aplicações dispersas por uma experiência fluida',
     },
     {
-      feature: 'Exportação 1-Clique Google Calendar & Ficheiro .ICS',
+      feature: 'Autenticação Rápida com Google & 100% Gratuito',
       nexo: true,
       others: false,
-      note: 'Integrado com a tua agenda favorita',
+      note: 'Sem pedidos de cartão de crédito nem períodos de teste fraudulentos',
     },
     {
-      feature: 'Partilha Prática de Listas para WhatsApp',
-      nexo: true,
-      others: true,
-      note: 'Formatação direta e limpa em texto',
-    },
-    {
-      feature: 'Privacidade Total (Sem rastreio nem venda de dados)',
+      feature: 'Arquitetura 100% Offline (PWA Instalável)',
       nexo: true,
       others: false,
-      note: 'Arquitetura Local-First',
+      note: 'Funciona no telemóvel e PC mesmo sem rede de dados ou Wi-Fi',
+    },
+    {
+      feature: 'Privacidade Rigorosa & Zero Anúncios',
+      nexo: true,
+      others: false,
+      note: 'Isolamento de dados por RLS, sem venda de dados a terceiros',
     },
   ];
 

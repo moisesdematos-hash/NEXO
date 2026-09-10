@@ -7,19 +7,27 @@ export const ConceptSection: React.FC = () => {
   const faqs = [
     {
       q: 'O NEXO é verdadeiramente gratuito?',
-      a: 'Sim! O NEXO pode ser utilizado gratuitamente por qualquer pessoa. Pode experimentar a aplicação como Convidado sem registo ou criar uma conta para sincronização entre dispositivos.',
+      a: 'Sim! O NEXO é 100% gratuito. Pode aceder de forma simples e imediata com a sua conta Google ou com endereço de email e palavra-passe, sem cartões de crédito nem compromissos.',
+    },
+    {
+      q: 'Como funciona a aba Família e o orçamento partilhado?',
+      a: 'Pode criar um grupo familiar e convidar membros por código. Todos podem registar despesas da casa, acompanhar o teto orçamental do mês, partilhar a lista de supermercado e usar a IA para planear refeições semanais.',
+    },
+    {
+      q: 'Como é que o NEXO ajuda os Estudantes nas disciplinas e exames?',
+      a: 'O NEXO inclui explicadores especializados por Inteligência Artificial (Matemática, Físico-Química, Português, História, Biologia e outras disciplinas), simuladores de exames com correção na hora, flashcards de memorização e calculadora de média final.',
+    },
+    {
+      q: 'Como funciona a criação de cursos na aba Aprender?',
+      a: 'Basta escrever o que quer aprender (ex: "Programação Web", "Finanças Pessoais" ou "Novo Idioma"). O NEXO gera um roteiro estruturado em módulos diários com exercícios práticos e acompanhamento das suas leituras.',
     },
     {
       q: 'Funciona sem ligação à Internet (Offline)?',
-      a: 'Sim! O NEXO possui uma arquitetura 100% offline-first com tecnologia PWA. Todas as suas tarefas, metas e listas são guardadas no seu dispositivo e sincronizadas automaticamente assim que recuperar a ligação à rede.',
+      a: 'Sim! Graças à tecnologia PWA (Progressive Web App), o NEXO funciona mesmo sem rede. Os seus dados são guardados em segurança no seu dispositivo e sincronizam automaticamente assim que recuperar a ligação.',
     },
     {
-      q: 'Como funciona a privacidade dos meus dados familiares?',
-      a: 'A sua privacidade é a nossa maior prioridade. O NEXO isola os seus dados pessoais dos dados partilhados da casa. Além disso, pode exportar todos os seus dados em formato JSON a qualquer momento nas Definições.',
-    },
-    {
-      q: 'Posso usar o NEXO no meu telemóvel (iPhone / Android)?',
-      a: 'Com certeza! Ao aceder ao NEXO no navegador do telemóvel, pode tocar em "Adicionar ao Ecrã Principal" (PWA) para instalar a aplicação como uma app nativa sem precisar da App Store.',
+      q: 'Os meus dados e informações familiares estão seguros?',
+      a: 'Absolutamente. Os seus dados são protegidos com criptografia AES-256 e isolamento rigoroso por linha (RLS) no Supabase. Não vendemos dados a terceiros nem usamos as suas notas privadas para anúncios.',
     },
   ];
 

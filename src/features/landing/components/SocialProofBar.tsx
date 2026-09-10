@@ -10,12 +10,12 @@ export const SocialProofBar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
           
-          {/* Active User Counter & Stars */}
+          {/* Credibility & Trust Indicator */}
           <div className="flex items-center gap-4">
             <div className="flex -space-x-3">
               <img
                 src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80"
-                alt="Utilizador NEXO"
+                alt="Utilizadora NEXO"
                 className="w-10 h-10 rounded-full border-2 border-slate-900 object-cover"
               />
               <img
@@ -25,11 +25,11 @@ export const SocialProofBar: React.FC = () => {
               />
               <img
                 src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80"
-                alt="Utilizador NEXO"
+                alt="Utilizadora NEXO"
                 className="w-10 h-10 rounded-full border-2 border-slate-900 object-cover"
               />
-              <div className="w-10 h-10 rounded-full border-2 border-slate-900 bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-xs font-bold text-white">
-                +12k
+              <div className="w-10 h-10 rounded-full border-2 border-slate-900 bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-[11px] font-bold text-white">
+                PT
               </div>
             </div>
             <div>
@@ -39,8 +39,8 @@ export const SocialProofBar: React.FC = () => {
                 ))}
                 <span className="text-xs font-bold text-slate-200 ml-1">4.9/5</span>
               </div>
-              <p className="text-xs text-slate-400">
-                Escolhido por mais de <strong className="text-white">12.000 pessoas</strong> e famílias
+              <p className="text-xs text-slate-300">
+                Criado e testado por <strong className="text-white">famílias e estudantes reais</strong>
               </p>
             </div>
           </div>
@@ -49,7 +49,7 @@ export const SocialProofBar: React.FC = () => {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full lg:w-auto">
             <div className="flex items-center gap-2 bg-slate-800/80 border border-slate-700/60 rounded-xl px-3 py-2 text-xs font-semibold text-slate-200">
               <ShieldCheck size={16} className="text-emerald-400 shrink-0" />
-              <span>100% Dados Locais</span>
+              <span>Privacidade &amp; RGPD</span>
             </div>
 
             <div className="flex items-center gap-2 bg-slate-800/80 border border-slate-700/60 rounded-xl px-3 py-2 text-xs font-semibold text-slate-200">
@@ -59,7 +59,7 @@ export const SocialProofBar: React.FC = () => {
 
             <div className="flex items-center gap-2 bg-slate-800/80 border border-slate-700/60 rounded-xl px-3 py-2 text-xs font-semibold text-slate-200">
               <Zap size={16} className="text-amber-400 shrink-0" />
-              <span>Comandos de Voz</span>
+              <span>1-Clique com Google</span>
             </div>
 
             <div className="flex items-center gap-2 bg-slate-800/80 border border-slate-700/60 rounded-xl px-3 py-2 text-xs font-semibold text-slate-200">
